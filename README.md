@@ -1,13 +1,22 @@
-ECE128-FPGA-LAB3
+# ECE128-FPGA-LAB6
 
-The purpose of this lab was to design a BCD to seven-segment display driver and use it to display the output of the 4-bit full adder from Lab 2 on the Basys3's seven-segment display. The adder computes A1 + B1 + CI and produces a 4-bit sum and a carry-out. A 2:1 mux, driven by a sel switch, chooses what gets sent to the display: the 4-bit sum when sel = 0, or the carry-out bit (1/0) when sel = 1. The BCD-to-seven-segment decoder then converts that 4-bit value into a single digit segment pattern shown on the display. A testbench was used to test A1, B1, CI, and sel through multiple cases and verify that the sum and carry-out were calculated correctly. A constraint file was also created to map the design to the Basys3 board: A1[3:0] and B1[3:0] to switches, CI and sel to switches, seg[6:0], an[3:0], and dp to the seven-segment display, and CO_rca to an LED.
+The purpose of this lab was to design a pushbutton debouncer, a Moore FSM that detects 1100, and an overlapping Mealy FSM that detects 1101. The debouncer uses a 20-bit counter that resets whenever the button is let go, so the LED only turns on after the button is held for about 10.5 ms. The Moore FSM sets z = 1 in S4, and the Mealy FSM sets z = 1 when it's in S3 and the input is 1. Each design has a testbench, and a constraint file maps the debouncer to the Basys3 (CLK to the clock, RAW to the center button, CLEAN to LD0).
 
-Run Instructions,
-Create a new project, selecting the board type you are uploading to
-Add the design files under the design folder: FourBitFullAdderDisplay, TwoOneMux, BCDtoSevenSegmentDisplay1, FourBitFullAdderCarry, OneBitFullAdder
-Add the testbench under the simulation folder
-Add the constraint file under the constraint folder
+Run Instructions
+Simulation:
+
+Create a new project and select the Basys3 board
+Add Debouncer.v, MooreFSM.v and MealyFSM.v under the design folder
+Add Debouncer_TB.v, MooreFSM_TB.v and MealyFSM_TB.v under the simulation folder
+Set one testbench as top, run Behavioral Simulation and hit Run All (the debouncer sim is 32 ms long)
+Repeat for the other two testbenches
+FPGA:
+
+Set debouncing as the top module
+Add Debouncer_Basys3.xdc under the constraint folder
 Run Synthesis
 Run Implementation
-Run Generate Bitstream
-Find the device and program
+Generate Bitstream
+Open Hardware Manager, find the device and program it
+Hold the center button and LD0 turns on, let go and it turns off
+
